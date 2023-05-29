@@ -1,0 +1,360 @@
+{
+  "name": "Upload HTML and Download as PDF",
+  "description": "When there is a trigger on a specified schedule, do action",
+  "version": 10,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "clock",
+    "name": "scheduled_event",
+    "as": "25b45e27",
+    "title": null,
+    "description": "<span class=\"provider\">Trigger</span> on a <span class=\"provider\">specified schedule</span>",
+    "keyword": "trigger",
+    "dynamicPickListSelection": {
+    },
+    "toggleCfg": {
+    },
+    "input": {
+      "time_unit": "minutes"
+    },
+    "extended_input_schema": [
+      {
+        "control_type": "integer",
+        "default": "5",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Define repeating schedule. Enter whole numbers only.\n                        This field can be set to a minimum of 5 minutes.",
+        "label": "Trigger every",
+        "name": "trigger_every",
+        "optional": false,
+        "suffix": {
+          "text": "minutes"
+        },
+        "type": "string"
+      },
+      {
+        "control_type": "date_time",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Set date and time to start or leave blank to start immediately. <b>Once recipe has been run or tested, value cannot be changed.</b>",
+        "label": "Start after",
+        "name": "start_after",
+        "optional": true,
+        "since_field": true,
+        "type": "date_time",
+        "parse_output": "date_time_conversion",
+        "render_input": "date_time_conversion"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "keyword": "try",
+        "dynamicPickListSelection": {
+        },
+        "toggleCfg": {
+        },
+        "input": {
+        },
+        "block": [
+          {
+            "number": 2,
+            "provider": "onprem_files",
+            "name": "download_file",
+            "as": "770b0b8c",
+            "title": null,
+            "description": null,
+            "keyword": "action",
+            "dynamicPickListSelection": {
+              "path": {
+                "ids": [
+                  "/",
+                  "/hello_world.html"
+                ],
+                "titles": [
+                  "Home folder",
+                  "hello_world.html"
+                ]
+              }
+            },
+            "toggleCfg": {
+              "path": true
+            },
+            "input": {
+              "path": "/hello_world.html"
+            },
+            "uuid": "4028fb23-8f18-481d-8e56-69bf6f7fc190"
+          },
+          {
+            "number": 3,
+            "provider": "google_drive",
+            "name": "upload_file",
+            "as": "82b2e092",
+            "keyword": "action",
+            "dynamicPickListSelection": {
+              "parents": {
+                "ids": [
+                  "0AKG2bhF5i1tBUk9PVA",
+                  "1tati661G2DPfGIjve_4nj5r48iZ5Mi5H"
+                ],
+                "titles": [
+                  "My Drive",
+                  "Workato Connector Test Folder"
+                ]
+              }
+            },
+            "toggleCfg": {
+              "parents": false
+            },
+            "input": {
+              "fileContent": "#{_('data.onprem_files.770b0b8c.content')}",
+              "mimeType": "application/msword",
+              "name": "hello_world.doc",
+              "parents": "1tati661G2DPfGIjve_4nj5r48iZ5Mi5H"
+            },
+            "uuid": "e173f75d-4bc2-44b4-a678-acefccdeeac3"
+          },
+          {
+            "number": 4,
+            "provider": "google_drive",
+            "name": "__adhoc_http_action",
+            "as": "61d83aea",
+            "title": "ExportFile",
+            "description": "<span class=\"provider\">ExportFile</span> in <span class=\"provider\">Google Drive</span> (Custom)",
+            "keyword": "action",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "mnemonic": "ExportFile",
+              "verb": "get",
+              "response_type": "raw",
+              "path": "files/#{_('data.google_drive.82b2e092.id')}/export",
+              "input": {
+                "schema": "[{\"name\":\"alt\",\"type\":\"string\",\"optional\":true,\"label\":\"alt\",\"control_type\":\"text\"},{\"name\":\"mimeType\",\"type\":\"string\",\"optional\":true,\"label\":\"mimeType\",\"control_type\":\"text\"}]",
+                "data": {
+                  "alt": "media",
+                  "mimeType": "application/pdf"
+                }
+              }
+            },
+            "extended_output_schema": [
+              {
+                "control_type": "text",
+                "label": "Body",
+                "name": "body",
+                "optional": true,
+                "type": "string"
+              }
+            ],
+            "extended_input_schema": [
+              {
+                "control_type": "text",
+                "hint": "Base URI is <b>https://www.googleapis.com/drive/v3/</b> - path will be appended to this URI. Use absolute URI to override this base URI.",
+                "label": "Path",
+                "name": "path",
+                "optional": false,
+                "type": "string"
+              },
+              {
+                "control_type": "select",
+                "default": "json",
+                "extends_schema": true,
+                "label": "Response type",
+                "name": "response_type",
+                "optional": true,
+                "pick_list": [
+                  [
+                    "JSON response",
+                    "json"
+                  ],
+                  [
+                    "Raw response",
+                    "raw"
+                  ]
+                ],
+                "sticky": false,
+                "type": "string"
+              },
+              {
+                "add_field_label": "Add URL parameter",
+                "control_type": "form-schema-builder",
+                "label": "Request URL parameters",
+                "name": "input",
+                "optional": true,
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Schema",
+                    "extends_schema": true,
+                    "sticky": true,
+                    "optional": true,
+                    "type": "string",
+                    "name": "schema"
+                  },
+                  {
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "alt",
+                        "optional": true,
+                        "sticky": true,
+                        "type": "string",
+                        "name": "alt"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "mimeType",
+                        "optional": true,
+                        "sticky": true,
+                        "type": "string",
+                        "name": "mimeType"
+                      }
+                    ],
+                    "label": "Data",
+                    "optional": true,
+                    "type": "object",
+                    "name": "data"
+                  }
+                ],
+                "sticky": false,
+                "type": "object"
+              },
+              {
+                "control_type": "key_value",
+                "empty_list_text": "Refer to the API documentation and add required headers to this HTTP request",
+                "empty_list_title": "Does this HTTP request require headers?",
+                "item_label": "Header",
+                "label": "Request headers",
+                "name": "request_headers",
+                "of": "object",
+                "optional": true,
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Name",
+                    "optional": true,
+                    "type": "string",
+                    "name": "name"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Value",
+                    "optional": true,
+                    "type": "string",
+                    "name": "value"
+                  }
+                ],
+                "type": "array"
+              },
+              {
+                "control_type": "schema-designer",
+                "extends_schema": true,
+                "label": "Response headers",
+                "name": "response_headers",
+                "optional": true,
+                "sample_data_type": "json_http",
+                "sticky": false,
+                "type": "string",
+                "schema_neutral": true
+              }
+            ],
+            "visible_config_fields": [
+              "mnemonic",
+              "verb",
+              "path",
+              "response_type",
+              "input",
+              "input.schema",
+              "input.data.alt",
+              "input.data.mimeType"
+            ],
+            "uuid": "c3d9a412-f190-4932-84e6-7f65583190b7"
+          },
+          {
+            "number": 5,
+            "as": "770636dd",
+            "keyword": "catch",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "max_retry_count": "0",
+              "retry_interval": "2"
+            },
+            "block": [
+              {
+                "number": 6,
+                "provider": "logger",
+                "name": "log_message",
+                "as": "1dbdbe3b",
+                "title": null,
+                "description": "Log <span class=\"provider\">message</span> to <span class=\"provider\">Job report</span>",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "user_logs_enabled": "false"
+                },
+                "extended_input_schema": [
+                  {
+                    "control_type": "switch",
+                    "default": false,
+                    "disable_formula": true,
+                    "extends_schema": true,
+                    "hint": "                Send a copy of the message to Workato logs.\n                <a href=\"https://docs.workato.com/features/logging-service.html\" target=\"_blank\" class=\"ng-scope\">\n                  Learn more\n                </a>\n",
+                    "label": "Send to Workato log service",
+                    "name": "user_logs_enabled",
+                    "optional": true,
+                    "type": "string"
+                  }
+                ],
+                "uuid": "58d1c9f9-ead5-48b0-8e05-2ccf78f7ae5e"
+              }
+            ],
+            "uuid": "99772fcb-8af5-4530-b4ef-04f7647bf7f8"
+          }
+        ],
+        "uuid": "b27978db-110d-478c-b261-f53bf88e7a77"
+      }
+    ],
+    "comment": "Trigger every 4 mins",
+    "uuid": "37f7852d-e113-44d4-b0d1-0605ae8934d1"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "clock",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "onprem_files",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "google_drive",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Gsheet/Connections/gsheet_con_google_drive_account.connection.json",
+        "name": "[GSHEET] CON | Google Drive Account",
+        "folder": "Gsheet/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "logger",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}
