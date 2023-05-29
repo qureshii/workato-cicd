@@ -1,0 +1,239 @@
+{
+  "name": "[CDH] REC-001 | Customer Data Hub",
+  "description": "When there is a trigger event, do action",
+  "version": 6,
+  "private": true,
+  "concurrency": 5,
+  "code": {
+    "number": 0,
+    "provider": "google_sheets",
+    "name": "new_spreadsheet_row_v4",
+    "as": "511e56e1",
+    "title": null,
+    "description": null,
+    "keyword": "trigger",
+    "dynamicPickListSelection": {
+      "spreadsheet": "Test Sheet"
+    },
+    "toggleCfg": {
+      "spreadsheet": true,
+      "sheet": true
+    },
+    "input": {
+      "spreadsheet": "1zqyAkSiP5_EGOX7tvQftB54stbNE7CSt-M3m0DBlukA",
+      "sheet": "Sheet1"
+    },
+    "extended_output_schema": [
+      {
+        "label": "Columns",
+        "name": "columns",
+        "properties": [
+          {
+            "control_type": "text",
+            "label": "Id",
+            "optional": true,
+            "type": "string",
+            "name": "col_1"
+          },
+          {
+            "control_type": "text",
+            "label": "First_name",
+            "optional": true,
+            "type": "string",
+            "name": "col_2"
+          },
+          {
+            "control_type": "text",
+            "label": "ip_address",
+            "optional": true,
+            "type": "string",
+            "name": "col_3"
+          },
+          {
+            "control_type": "text",
+            "label": "last_name",
+            "optional": true,
+            "type": "string",
+            "name": "col_4"
+          },
+          {
+            "control_type": "text",
+            "label": "email",
+            "optional": true,
+            "type": "string",
+            "name": "col_5"
+          }
+        ],
+        "type": "object"
+      }
+    ],
+    "extended_input_schema": [
+      {
+        "control_type": "select",
+        "extends_schema": true,
+        "hint": "Select a sheet to monitor for new row. The sheet must have at least one header row and  one data row.",
+        "label": "Sheet",
+        "name": "sheet",
+        "optional": false,
+        "pick_list": [
+          [
+            "Sheet1",
+            "Sheet1"
+          ]
+        ],
+        "toggle_field": {
+          "control_type": "text",
+          "label": "Sheet",
+          "toggle_hint": "Use sheet name",
+          "extends_schema": true,
+          "change_on_blur": true,
+          "toggle_to_secondary_hint": "Use sheet name",
+          "toggle_to_primary_hint": "Select a sheet",
+          "hint": "Enter the sheet name. The sheet must have at least one header row and one data row.",
+          "type": "string",
+          "name": "sheet"
+        },
+        "toggle_hint": "Select a sheet",
+        "type": "string"
+      },
+      {
+        "control_type": "checkbox",
+        "extends_schema": true,
+        "hint": "Default is <b>No</b>.<br>If <b>Yes</b>, add column names manually in the input field below.<br>If <b>No</b>, Workato will automatically get the first row in your sheet as column names.<br>",
+        "label": "Add column names manually?",
+        "name": "header_fl",
+        "optional": true,
+        "toggle_field": {
+          "label": "Add column names manually?",
+          "control_type": "text",
+          "toggle_hint": "Use custom value",
+          "extends_schema": true,
+          "hint": "Default is <b>No</b>.<br>If <b>Yes</b>, add column names manually in the input field below.<br>If <b>No</b>, Workato will automatically get the first row in your sheet as column names.<br>",
+          "optional": true,
+          "type": "boolean",
+          "name": "header_fl"
+        },
+        "toggle_hint": "Select from option list",
+        "type": "boolean",
+        "parse_output": {
+        },
+        "render_input": {
+        }
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "keyword": "try",
+        "dynamicPickListSelection": {
+        },
+        "toggleCfg": {
+        },
+        "input": {
+        },
+        "block": [
+          {
+            "number": 2,
+            "provider": "logger",
+            "name": "log_message",
+            "as": "6716ccce",
+            "keyword": "action",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "message": "#{_('data.google_sheets.511e56e1.row')}#{_('data.google_sheets.511e56e1.columns.col_2')}#{_('data.google_sheets.511e56e1.columns.col_4')}#{_('data.google_sheets.511e56e1.columns.col_3')}#{_('data.google_sheets.511e56e1.columns.col_5')}"
+            },
+            "comment": "DO nothing here",
+            "uuid": "1c418dc7-575c-4edb-adcf-3f5dcd514ec0"
+          },
+          {
+            "number": 3,
+            "as": "f812fe8e",
+            "keyword": "catch",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "max_retry_count": "0",
+              "retry_interval": "2"
+            },
+            "block": [
+              {
+                "number": 4,
+                "provider": "logger",
+                "name": "log_message",
+                "as": "8222e46d",
+                "title": null,
+                "description": "Log <span class=\"provider\">message</span> to <span class=\"provider\">Job report</span>",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "user_logs_enabled": "false"
+                },
+                "extended_input_schema": [
+                  {
+                    "control_type": "switch",
+                    "default": false,
+                    "disable_formula": true,
+                    "extends_schema": true,
+                    "hint": "                Send a copy of the message to Workato logs.\n                <a href=\"https://docs.workato.com/features/logging-service.html\" target=\"_blank\" class=\"ng-scope\">\n                  Learn more\n                </a>\n",
+                    "label": "Send to Workato log service",
+                    "name": "user_logs_enabled",
+                    "optional": true,
+                    "type": "string"
+                  }
+                ],
+                "comment": "Log Errors",
+                "uuid": "1ca76a90-ee34-4e82-b46c-10ceb4e7cc76"
+              }
+            ],
+            "comment": "Catch all errors",
+            "uuid": "4f6bd6f6-b2e9-4c5a-90fb-ef41168ce151"
+          }
+        ],
+        "comment": "safe execution",
+        "uuid": "d8eb0784-296c-4498-b444-bb78ede8a28d"
+      }
+    ],
+    "comment": "Trigger on new rows",
+    "job_report_schema": [
+      {
+        "name": "custom_column_0",
+        "label": "First_Name"
+      },
+      {
+        "name": "custom_column_1",
+        "label": "Last_Name"
+      }
+    ],
+    "job_report_config": {
+      "custom_column_0": "#{_('data.google_sheets.511e56e1.columns.col_2')}",
+      "custom_column_1": "#{_('data.google_sheets.511e56e1.columns.col_4')}"
+    },
+    "uuid": "44e4e4bc-f591-41cb-a555-45cfcca93786"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "google_sheets",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Gsheet/Connections/gsheet_conn_google_sheets_account.connection.json",
+        "name": "[GSHEET] CONN | Google Sheets Account",
+        "folder": "Gsheet/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "logger",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}
