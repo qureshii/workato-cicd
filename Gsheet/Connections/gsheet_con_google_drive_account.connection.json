@@ -1,6 +1,0 @@
-{
-  "name": "[GSHEET] CON | Google Drive Account",
-  "provider": "google_drive",
-  "secure_gateway_tunnel_name": null,
-  "root_folder": false
-}

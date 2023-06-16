@@ -1,6 +1,0 @@
-{
-  "name": "Global | CONN | MongoDB Atlassian",
-  "provider": "mongo",
-  "secure_gateway_tunnel_name": null,
-  "root_folder": false
-}
